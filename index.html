@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Avni</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aesthetic Test: Avni</title>
     <style>
-        /* Base Reset & Variables */
+        /* =========================================
+           1. CORE RESET & VARIABLES (Deep Midnight)
+           ========================================= */
         * {
             margin: 0;
             padding: 0;
@@ -14,23 +16,54 @@
         }
 
         :root {
-            --bg-dark: #0a0a0a;
-            --card-bg: #141414;
-            --border-color: #222222;
+            --bg-deep: #0a0a0a;
+            --bg-card: #111111;
             --text-main: #ffffff;
             --text-muted: #888888;
-            --accent: #aaaaaa;
+            --accent-glow: rgba(255, 255, 255, 0.15);
+            --border-color: #222222;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-deep);
             color: var(--text-main);
-            line-height: 1.6;
+            line-height: 1.7;
             overflow-x: hidden;
         }
 
-        /* Hero Landing Section */
+        /* =========================================
+           2. PARTICLE BACKGROUND (Dynamic Field)
+           ========================================= */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1; /* Lowest layer */
+            pointer-events: none; /* Let clicks pass through */
+        }
+
+        /* =========================================
+           3. CINEMATIC SCROLLING & TEXT REVEALS
+           ========================================= */
+        /* Pre-scroll state (hidden/faded down) */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1.2s ease;
+        }
+
+        /* Active state (triggered by JavaScript) */
+        .reveal-on-scroll.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           4. LAYOUT COMPONENTS
+           ========================================= */
         .hero {
             height: 100vh;
             display: flex;
@@ -40,22 +73,24 @@
             text-align: center;
             padding: 20px;
             position: relative;
+            z-index: 10; /* Above particles */
         }
 
         .hero h1 {
-            font-size: 3rem;
-            font-weight: 400;
-            letter-spacing: -1px;
-            margin-bottom: 15px;
-            animation: fadeInDown 1.2s ease;
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: -1.5px;
+            margin-bottom: 20px;
+            animation: fadeInDown 1.5s ease;
         }
+
+        @media (max-width: 600px) { .hero h1 { font-size: 2.5rem; } }
 
         .hero p {
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             max-width: 600px;
-            margin-bottom: 40px;
-            animation: fadeInUp 1.2s ease;
+            animation: fadeInUp 1.5s ease;
         }
 
         .scroll-indicator {
@@ -68,208 +103,258 @@
             animation: pulse 2s infinite;
         }
 
-        /* Main Content Container */
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 80px 20px;
+            padding: 100px 20px;
+            position: relative;
+            z-index: 10;
         }
 
-        /* Section Styling */
         .section {
-            margin-bottom: 120px;
+            margin-bottom: 150px;
         }
 
         .section-title {
-            font-size: 1.5rem;
-            font-weight: 500;
+            font-size: 1.8rem;
+            font-weight: 400;
             letter-spacing: -0.5px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            margin-bottom: 40px;
             color: var(--text-main);
+            border-left: 2px solid #333;
+            padding-left: 15px;
         }
 
-        /* Chapter/Letter Text Layout */
-        .letter-content p {
-            color: #dddddd;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-        }
-
-        /* Memory Grid Placeholder */
-        .memory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .memory-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 30px 20px;
-            text-align: center;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .memory-card:hover {
-            transform: translateY(-5px);
-            border-color: #444444;
-        }
-
-        .memory-date {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* The Vault / Interactive Message Section */
+        /* =========================================
+           5. 3D FLIPPING CARDS (Interactive Vault)
+           ========================================= */
         .vault-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            perspective: 1000px; /* Essential for 3D perspective */
         }
 
-        @media (max-width: 600px) {
-            .vault-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 2.2rem; }
+        .card-container {
+            height: 250px;
+            cursor: pointer;
+            position: relative;
         }
 
-        .vault-btn {
-            background: var(--card-bg);
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* When the card has the 'flipped' class, rotate it 180 degrees */
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden; /* Hides the reverse side */
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+            background: var(--bg-card);
+        }
+
+        /* Front face */
+        .card-front {
+            align-items: center;
+            text-align: center;
+            color: var(--text-muted);
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* Add dynamic glow on front hover (Visual 3.2) */
+        .card-container:not(.flipped):hover .card-front {
+            box-shadow: 0 0 25px var(--accent-glow);
+            color: var(--text-main);
+            border-color: #444;
+        }
+
+        .card-back {
+            transform: rotateY(180deg); /* Start rotated */
+            align-items: flex-start;
+            text-align: left;
+            color: #dddddd;
+            border-color: #333;
+        }
+
+        /* =========================================
+           6. AMBIENT AUDIO PLAYER (Sensory)
+           ========================================= */
+        .audio-player-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .play-btn {
+            background: none;
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 20px;
-            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             cursor: pointer;
-            text-align: left;
-            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s ease;
-            width: 100%;
         }
 
-        .vault-btn:hover {
-            background: #1c1c1c;
-            border-color: #555555;
+        .play-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #444;
         }
 
-        .vault-content {
-            display: none;
-            grid-column: 1 / -1;
-            background: #111111;
-            border: 1px dashed var(--border-color);
-            padding: 25px;
-            border-radius: 8px;
-            margin-top: -10px;
-            margin-bottom: 10px;
-            color: #e0e0e0;
-            animation: fadeIn 0.4s ease forwards;
-        }
-
-        /* Keyframe Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
+        /* Keyframe Animations for Hero/Scroll */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
     </style>
 </head>
 <body>
 
-    <!-- HERO SECTION -->
+    <!-- LAYER 1: The Particle Background (Aesthetic 1.1) -->
+    <div id="particles-js"></div>
+
+    <!-- LAYER 2: Main Content (Aesthetic 1.2, 2.1, 3.1) -->
+    
+    <!-- Hero (Always Visible) -->
     <section class="hero">
-        <h1>Happy Birthday, Avni.</h1>
-        <p>A permanent digital sanctuary built entirely for you. Scroll down to enter.</p>
-        <div class="scroll-indicator">↓ Scroll</div>
+        <h1>Aesthetic Prototype</h1>
+        <p>Testing the immersive night-sky environment, smooth scroll-mation reveals, and the interactive 3D Vault. <strong>This is just a technical test.</strong></p>
+        <div class="scroll-indicator">↓ Scroll to Begin</div>
     </section>
 
-    <!-- MAIN CONTAINER -->
+    <!-- Main Container (With Scroll Reveals) -->
     <div class="container">
 
-        <!-- SECTION 1: THE CORE LETTER -->
-        <section class="section">
-            <h2 class="section-title">Chapter I: The Foundation</h2>
-            <div class="letter-content">
-                <p>Avni, this is where your primary birthday letter or introductory message will live. We have five weeks to fully write out your thoughts clearly, making sure everything you want to tell her is permanently etched right here.</p>
-                <p>Every line of text, paragraph, and transition will be customized exactly to speak directly to her. We can break this section down into multiple chapters or keep it as one beautifully continuous written path.</p>
-            </div>
+        <!-- Cinematic Fading Text (Aesthetic 2.1) -->
+        <section class="section reveal-on-scroll">
+            <h2 class="section-title">The Reading Experience</h2>
+            <p>This paragraph is part of the <strong>reveal-on-scroll</strong> test. As you scrolled down, the entire section smoothly bled into view from 0% opacity, guided by subtle momentum.</p>
+            <p style="margin-top:20px; color:#bbb;">This simulates the high-end, cinematic narrative flow we discussed for the main letter. The next section will test the interactive cards.</p>
         </section>
 
-        <!-- SECTION 2: TIMELINE / MILESTONES -->
-        <section class="section">
-            <h2 class="section-title">Chapter II: Key Milestones</h2>
-            <div class="memory-grid">
-                <div class="memory-card">
-                    <div class="memory-date">Milestone One</div>
-                    <p style="color: #bbb;">A placeholder for a critical date or shared memory that stands out in your journey.</p>
-                </div>
-                <div class="memory-card">
-                    <div class="memory-date">Milestone Two</div>
-                    <p style="color: #bbb;">Another defining moment, internal joke, or shared turning point in the relationship.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 3: THE VAULT (INTERACTIVE) -->
-        <section class="section">
-            <h2 class="section-title">Chapter III: The Vault</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">Click an element below to unlock a specific note.</p>
+        <!-- The 3D Interactive Vault (Aesthetic 3.1, 3.2) -->
+        <section class="section reveal-on-scroll">
+            <h2 class="section-title">The Interactive Vault</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Hover to see the glow micro-interaction. Click to test the 3D flipping animation.</p>
             
             <div class="vault-grid">
-                <!-- Card 1 -->
-                <button class="vault-btn" onclick="toggleVault('note1')">→ When you miss me</button>
-                <div class="vault-content" id="note1">
-                    <p>This is the custom text that appears when she clicks the first button. Perfect for an "Open When" style note providing immediate structural support or reminder of your permanent commitment.</p>
+                <!-- 3D Card 1 -->
+                <div class="card-container" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">→ Milestone Note</div>
+                        <div class="card-back">
+                            <p style="color:#fff; font-weight:500; margin-bottom:10px;">The Reveal</p>
+                            <p>This is a standard 'back' face for a memory card or an 'Open When' letter. The rotation is 3D and uses smooth physics.</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Card 2 -->
-                <button class="vault-btn" onclick="toggleVault('note2')">→ When you feel anxious</button>
-                <div class="vault-content" id="note2">
-                    <p>This is the text for the second button. You can write something deeply grounding here, serving as her fixed anchor whenever she feels overwhelmed or caught in a spiral.</p>
-                </div>
-
-                <!-- Card 3 -->
-                <button class="vault-btn" onclick="toggleVault('note3')">→ A reminder for everyday</button>
-                <div class="vault-content" id="note3">
-                    <p>This is the text for the third button. A permanent, unchanging reminder of exactly how you view her, her worth, and your relationship's long-term trajectory.</p>
-                </div>
-
-                <!-- Card 4 -->
-                <button class="vault-btn" onclick="toggleVault('note4')">→ Read last</button>
-                <div class="vault-content" id="note4">
-                    <p>The closing message to tie the whole experience together before she finishes exploring the page.</p>
+                <!-- 3D Card 2 -->
+                <div class="card-container" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">→ Secret Message</div>
+                        <div class="card-back">
+                            <p style="color:#fff; font-weight:500; margin-bottom:10px;">Typewriter Effect?</p>
+                            <p>We could add the real-time typewriter typing effect right here on the back face the moment the card finishes flipping.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
     </div>
 
-    <!-- INTERACTIVE LOGIC -->
+    <!-- LAYER 3: Ambient Audio Player (Sensory 4.1) -->
+    <div class="audio-player-container">
+        <span>Audio Player Test</span>
+        <button class="play-btn" onclick="alert('Audio placeholder test active.')">▶</button>
+    </div>
+
+    <!-- =========================================
+         7. SCRIPTING & LOGIC
+         ========================================= -->
+    
+    <!-- A. Load Particles.js Library (Hosted externally) -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- B. Initialize Particles (Visual 1.1) -->
     <script>
-        function toggleVault(id) {
-            const content = document.getElementById(id);
-            // Toggle visibility of the clicked content
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        }
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 60, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.3, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
+                size: { value: 2, random: true, anim: { enable: false, speed: 40, size_min: 0.1, sync: false } },
+                line_linked: { enable: false },
+                move: { enable: true, speed: 0.8, direction: "top", random: true, straight: false, out_mode: "out", bounce: false }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "bubble" }, // Interactive on mouse/finger hover
+                    onclick: { enable: false }
+                },
+                modes: {
+                    bubble: { distance: 100, size: 4, duration: 2, opacity: 0.8, speed: 3 }
+                }
+            },
+            retina_detect: true
+        });
     </script>
+
+    <!-- C. Logic for Scroll Reveals (Visual 2.1) -->
+    <script>
+        const reveals = document.querySelectorAll('.reveal-on-scroll');
+
+        function checkReveal() {
+            const triggerBottom = window.innerHeight / 1.1; // 90% of viewport height
+
+            reveals.forEach(reveal => {
+                const revealTop = reveal.getBoundingClientRect().top;
+
+                if (revealTop < triggerBottom) {
+                    reveal.classList.add('active');
+                } else {
+                    reveal.classList.remove('active'); // Optional: hide when scrolling back up
+                }
+            });
+        }
+
+        // Run checkReveal on scroll and initial load
+        window.addEventListener('scroll', checkReveal);
+        window.addEventListener('load', checkReveal);
+    </script>
+
 </body>
 </html>
