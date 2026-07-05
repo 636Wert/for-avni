@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aesthetic Test: Avni</title>
+    <title>The Permanent State</title>
+    <!-- Import premium, high-end editorial font for that luxury feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
     <style>
         /* =========================================
-           1. CORE RESET & VARIABLES (Deep Midnight)
+           1. NOCTURNAL LUXURY RESET & VARIABLES
            ========================================= */
         * {
             margin: 0;
@@ -16,53 +21,52 @@
         }
 
         :root {
-            --bg-deep: #0a0a0a;
-            --bg-card: #111111;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --accent-glow: rgba(255, 255, 255, 0.15);
-            --border-color: #222222;
+            --bg-pure: #030303; /* Deepest pitch black */
+            --glass-bg: rgba(13, 13, 13, 0.7); /* Smoked glass effect */
+            --glass-border: rgba(255, 255, 255, 0.06); /* Razor-thin crisp line */
+            --text-pure: #ffffff;
+            --text-dim: #7d7d7d;
+            --text-dark: #404040;
+            --amber-glow: rgba(212, 163, 89, 0.15); /* Luxury warm low-light accent */
+            --amber-text: #d4a359;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            line-height: 1.7;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-pure);
+            color: var(--text-pure);
+            line-height: 1.8;
             overflow-x: hidden;
+            letter-spacing: -0.2px;
         }
 
-        /* =========================================
-           2. PARTICLE BACKGROUND (Dynamic Field)
-           ========================================= */
-        #particles-js {
+        /* Ambient subtle grain overlay to mimic analog photography pins */
+        body::before {
+            content: "";
             position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1; /* Lowest layer */
-            pointer-events: none; /* Let clicks pass through */
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.015;
+            pointer-events: none;
+            z-index: 9999;
         }
 
         /* =========================================
-           3. CINEMATIC SCROLLING & TEXT REVEALS
+           2. INTERACTIVE CINEMATIC SCROLL REVEALS
            ========================================= */
-        /* Pre-scroll state (hidden/faded down) */
-        .reveal-on-scroll {
+        .reveal-node {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 1s ease, transform 1.2s ease;
+            transform: translateY(40px);
+            transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Active state (triggered by JavaScript) */
-        .reveal-on-scroll.active {
+        .reveal-node.active {
             opacity: 1;
             transform: translateY(0);
         }
 
         /* =========================================
-           4. LAYOUT COMPONENTS
+           3. HERO INTERFACE (The Dashboard View)
            ========================================= */
         .hero {
             height: 100vh;
@@ -70,222 +74,289 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 20px;
+            padding: 24px;
             position: relative;
-            z-index: 10; /* Above particles */
         }
 
+        /* Cinematic High-End Header */
         .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 300;
-            letter-spacing: -1.5px;
+            font-family: 'Cinzel', serif;
+            font-size: 2.8rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        /* Spotify-style Custom Interface Block (From her pins) */
+        .dashboard-ui {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 24px 32px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            animation: slideUp 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .ui-header {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dark);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 20px;
-            animation: fadeInDown 1.5s ease;
         }
 
-        @media (max-width: 600px) { .hero h1 { font-size: 2.5rem; } }
-
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            max-width: 600px;
-            animation: fadeInUp 1.5s ease;
+        .track-info {
+            text-align: left;
+            margin-bottom: 24px;
         }
 
-        .scroll-indicator {
+        .track-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .track-artist {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .progress-current {
+            width: 63%; /* Arbitrary status */
+            height: 100%;
+            background: var(--text-pure);
+            border-radius: 2px;
+        }
+
+        .time-stamps {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dark);
+            font-size: 0.75rem;
+            font-family: monospace;
+        }
+
+        .scroll-prompt {
             position: absolute;
             bottom: 40px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            letter-spacing: 2px;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            animation: pulse 2s infinite;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 100px 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .section {
-            margin-bottom: 150px;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 400;
-            letter-spacing: -0.5px;
-            margin-bottom: 40px;
-            color: var(--text-main);
-            border-left: 2px solid #333;
-            padding-left: 15px;
+            letter-spacing: 4px;
+            color: var(--text-dark);
+            animation: pulse 2.5s infinite;
         }
 
         /* =========================================
-           5. 3D FLIPPING CARDS (Interactive Vault)
+           4. MAIN NARRATIVE CONTINUUM
            ========================================= */
-        .vault-grid {
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 24px 150px 24px;
+        }
+
+        .section {
+            margin-bottom: 180px;
+        }
+
+        .chapter-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            color: var(--amber-text);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding-bottom: 16px;
+        }
+
+        .narrative p {
+            font-size: 1.05rem;
+            color: #cccccc;
+            margin-bottom: 28px;
+            font-weight: 300;
+        }
+
+        /* =========================================
+           5. 3D METROPOLIS GLASS CARDS (The Vault)
+           ========================================= */
+        .vault-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            perspective: 1000px; /* Essential for 3D perspective */
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            perspective: 1200px;
         }
 
-        .card-container {
-            height: 250px;
+        @media (max-width: 600px) {
+            .vault-layout { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2rem; }
+        }
+
+        .vault-box {
+            height: 200px;
             cursor: pointer;
-            position: relative;
         }
 
-        .card-inner {
+        .vault-spine {
             width: 100%;
             height: 100%;
-            position: absolute;
+            position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
             border-radius: 12px;
-            border: 1px solid var(--border-color);
         }
 
-        /* When the card has the 'flipped' class, rotate it 180 degrees */
-        .card-container.flipped .card-inner {
+        .vault-box.flipped .vault-spine {
             transform: rotateY(180deg);
         }
 
-        .card-front, .card-back {
+        .face-front, .face-back {
+            position: absolute;
             width: 100%;
             height: 100%;
-            position: absolute;
-            backface-visibility: hidden; /* Hides the reverse side */
+            backface-visibility: hidden;
             border-radius: 12px;
+            padding: 32px;
+            border: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 30px;
-            background: var(--bg-card);
         }
 
-        /* Front face */
-        .card-front {
+        .face-front {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             align-items: center;
             text-align: center;
-            color: var(--text-muted);
-            transition: box-shadow 0.3s ease;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
         }
 
-        /* Add dynamic glow on front hover (Visual 3.2) */
-        .card-container:not(.flipped):hover .card-front {
-            box-shadow: 0 0 25px var(--accent-glow);
-            color: var(--text-main);
-            border-color: #444;
+        /* Subtle luxury amber glow hover state */
+        .vault-box:not(.flipped):hover .face-front {
+            border-color: rgba(212, 163, 89, 0.3);
+            box-shadow: 0 0 30px var(--amber-glow);
+            color: var(--text-pure);
         }
 
-        .card-back {
-            transform: rotateY(180deg); /* Start rotated */
+        .face-back {
+            background: #0d0d0d;
+            transform: rotateY(180deg);
             align-items: flex-start;
             text-align: left;
-            color: #dddddd;
+            font-size: 0.95rem;
+            color: #d1d1d1;
+            font-weight: 300;
             border-color: #333;
         }
 
         /* =========================================
-           6. AMBIENT AUDIO PLAYER (Sensory)
+           6. ANIMATION KEYFRAMES
            ========================================= */
-        .audio-player-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            padding: 10px 15px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            animation: fadeInUp 1s ease;
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(40px); } 
+            to { opacity: 1; transform: translateY(0); } 
         }
-
-        .play-btn {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .play-btn:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: #444;
-        }
-
-        /* Keyframe Animations for Hero/Scroll */
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.6; } }
     </style>
 </head>
 <body>
 
-    <!-- LAYER 1: The Particle Background (Aesthetic 1.1) -->
-    <div id="particles-js"></div>
-
-    <!-- LAYER 2: Main Content (Aesthetic 1.2, 2.1, 3.1) -->
-    
-    <!-- Hero (Always Visible) -->
+    <!-- HERO / LANDING DASHBOARD -->
     <section class="hero">
-        <h1>Aesthetic Prototype</h1>
-        <p>Testing the immersive night-sky environment, smooth scroll-mation reveals, and the interactive 3D Vault. <strong>This is just a technical test.</strong></p>
-        <div class="scroll-indicator">↓ Scroll to Begin</div>
+        <h1>The Permanent State</h1>
+        
+        <div class="dashboard-ui">
+            <div class="ui-header">
+                <span>System Status // Live</span>
+                <span>3:33 AM</span>
+            </div>
+            <div class="track-info">
+                <div class="track-title">An Unchanging Anchor</div>
+                <div class="track-artist">Built Specifically For Avni</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-current"></div>
+            </div>
+            <div class="time-stamps">
+                <span>08:24</span>
+                <span>&infin;</span>
+            </div>
+        </div>
+
+        <div class="scroll-prompt">↓ Scroll Journey</div>
     </section>
 
-    <!-- Main Container (With Scroll Reveals) -->
+    <!-- CONTENT MODULE CONTINUUM -->
     <div class="container">
 
-        <!-- Cinematic Fading Text (Aesthetic 2.1) -->
-        <section class="section reveal-on-scroll">
-            <h2 class="section-title">The Reading Experience</h2>
-            <p>This paragraph is part of the <strong>reveal-on-scroll</strong> test. As you scrolled down, the entire section smoothly bled into view from 0% opacity, guided by subtle momentum.</p>
-            <p style="margin-top:20px; color:#bbb;">This simulates the high-end, cinematic narrative flow we discussed for the main letter. The next section will test the interactive cards.</p>
+        <!-- NARRATIVE CHAPTER I -->
+        <section class="section reveal-node">
+            <div class="chapter-label">Chapter I</div>
+            <h2 class="section-title">The Structural Foundation</h2>
+            <div class="narrative">
+                <p>This layout is built entirely to mirror the Nocturnal Luxury aesthetic from her boards. The smoked glass, stark pitch-black backdrops, clean UI blocks, and high-end editorial fonts create an exclusive, protective environment.</p>
+                <p>As she scrolls downward, content behaves like neon city lines slicing through the midnight fog—materializing seamlessly right at eye level before fading softly back into the perimeter.</p>
+            </div>
         </section>
 
-        <!-- The 3D Interactive Vault (Aesthetic 3.1, 3.2) -->
-        <section class="section reveal-on-scroll">
-            <h2 class="section-title">The Interactive Vault</h2>
-            <p style="color: var(--text-muted); margin-bottom: 30px;">Hover to see the glow micro-interaction. Click to test the 3D flipping animation.</p>
-            
-            <div class="vault-grid">
-                <!-- 3D Card 1 -->
-                <div class="card-container" onclick="this.classList.toggle('flipped')">
-                    <div class="card-inner">
-                        <div class="card-front">→ Milestone Note</div>
-                        <div class="card-back">
-                            <p style="color:#fff; font-weight:500; margin-bottom:10px;">The Reveal</p>
-                            <p>This is a standard 'back' face for a memory card or an 'Open When' letter. The rotation is 3D and uses smooth physics.</p>
+        <!-- NARRATIVE CHAPTER II (The Interactive Vault) -->
+        <section class="section reveal-node">
+            <div class="chapter-label">Chapter II</div>
+            <h2 class="section-title">The Vault Architecture</h2>
+            <div class="narrative" style="margin-bottom: 40px;">
+                <p>Below are the interactive glass plates. When her finger taps them, they rotate entirely along a 3D structural spine to reveal the fixed, permanent statements hidden on the back face.</p>
+            </div>
+
+            <div class="vault-layout">
+                <!-- Plate 1 -->
+                <div class="vault-box" onclick="this.classList.toggle('flipped')">
+                    <div class="vault-spine">
+                        <div class="face-front">[ Open When Outside Noise Clutters ]</div>
+                        <div class="face-back">
+                            <p>This is where we will insert deep, clear, grounding structural support statements to instantly stabilize her whenever she faces external spirals.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3D Card 2 -->
-                <div class="card-container" onclick="this.classList.toggle('flipped')">
-                    <div class="card-inner">
-                        <div class="card-front">→ Secret Message</div>
-                        <div class="card-back">
-                            <p style="color:#fff; font-weight:500; margin-bottom:10px;">Typewriter Effect?</p>
-                            <p>We could add the real-time typewriter typing effect right here on the back face the moment the card finishes flipping.</p>
+                <!-- Plate 2 -->
+                <div class="vault-box" onclick="this.classList.toggle('flipped')">
+                    <div class="vault-spine">
+                        <div class="face-front">[ Open For Absolute Clarity ]</div>
+                        <div class="face-back">
+                            <p>A place for a permanent, factual declaration of your commitment, leaving absolutely zero room for doubt, comparison, or second-guessing.</p>
                         </div>
                     </div>
                 </div>
@@ -294,67 +365,25 @@
 
     </div>
 
-    <!-- LAYER 3: Ambient Audio Player (Sensory 4.1) -->
-    <div class="audio-player-container">
-        <span>Audio Player Test</span>
-        <button class="play-btn" onclick="alert('Audio placeholder test active.')">▶</button>
-    </div>
-
-    <!-- =========================================
-         7. SCRIPTING & LOGIC
-         ========================================= -->
-    
-    <!-- A. Load Particles.js Library (Hosted externally) -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    
-    <!-- B. Initialize Particles (Visual 1.1) -->
+    <!-- RUNTIME LOGIC -->
     <script>
-        particlesJS("particles-js", {
-            particles: {
-                number: { value: 60, density: { enable: true, value_area: 800 } },
-                color: { value: "#ffffff" },
-                shape: { type: "circle" },
-                opacity: { value: 0.3, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
-                size: { value: 2, random: true, anim: { enable: false, speed: 40, size_min: 0.1, sync: false } },
-                line_linked: { enable: false },
-                move: { enable: true, speed: 0.8, direction: "top", random: true, straight: false, out_mode: "out", bounce: false }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: true, mode: "bubble" }, // Interactive on mouse/finger hover
-                    onclick: { enable: false }
-                },
-                modes: {
-                    bubble: { distance: 100, size: 4, duration: 2, opacity: 0.8, speed: 3 }
-                }
-            },
-            retina_detect: true
-        });
-    </script>
+        const nodes = document.querySelectorAll('.reveal-node');
 
-    <!-- C. Logic for Scroll Reveals (Visual 2.1) -->
-    <script>
-        const reveals = document.querySelectorAll('.reveal-on-scroll');
+        function evaluateScroll() {
+            const boundary = window.innerHeight / 1.15; // Trigger point
 
-        function checkReveal() {
-            const triggerBottom = window.innerHeight / 1.1; // 90% of viewport height
-
-            reveals.forEach(reveal => {
-                const revealTop = reveal.getBoundingClientRect().top;
-
-                if (revealTop < triggerBottom) {
-                    reveal.classList.add('active');
+            nodes.forEach(node => {
+                const nodeTop = node.getBoundingClientRect().top;
+                if (nodeTop < boundary) {
+                    node.classList.add('active');
                 } else {
-                    reveal.classList.remove('active'); // Optional: hide when scrolling back up
+                    node.classList.remove('active');
                 }
             });
         }
 
-        // Run checkReveal on scroll and initial load
-        window.addEventListener('scroll', checkReveal);
-        window.addEventListener('load', checkReveal);
+        window.addEventListener('scroll', evaluateScroll);
+        window.addEventListener('load', evaluateScroll);
     </script>
-
 </body>
 </html>
