@@ -47,10 +47,13 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5% 150px 5%; }
         .section { margin-bottom: 180px; }
         
-        /* Music Controller */
-        .music-controller { position: fixed; bottom: 30px; left: 5%; z-index: 1000; }
+        /* Music Controller & Slider */
+        .music-controller { position: fixed; bottom: 30px; left: 5%; z-index: 1000; display: flex; align-items: center; }
         .play-toggle { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-dim); padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s ease; }
         .play-toggle:hover { color: var(--text-pure); border-color: var(--amber-text); }
+        
+        .volume-slider { -webkit-appearance: none; width: 80px; height: 2px; background: #333; margin-left: 15px; cursor: pointer; }
+        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; background: var(--text-pure); border-radius: 50%; }
 
         /* Vault Layout */
         .vault-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; perspective: 1200px; }
@@ -79,9 +82,10 @@
         </div>
     </section>
 
-    <!-- Music Controller -->
+    <!-- Music Controller with Slider -->
     <div class="music-controller">
         <button class="play-toggle" onclick="toggleAudio()">Play / Next</button>
+        <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.5" oninput="setVolume(this.value)">
     </div>
 
     <div class="container">
@@ -90,7 +94,6 @@
                 <h2 class="section-title">The Foundation</h2>
                 <p>Welcome to the sanctuary. Everything here is built to be a permanent, unchanging reflection of my commitment.</p>
             </div>
-            <!-- Update the src below to your uploaded image filename -->
             <img src="city-night.jpg" alt="Aesthetic" style="width: 100%; border-radius: 4px;">
         </section>
 
@@ -107,7 +110,7 @@
     </div>
 
     <script>
-        const playlist = ["Apocalypse - Cigarettes After Sex.mp3", "Red Hot Chili Peppers - Dark Necessities [OFFICIAL AUDIO].mp3", "song3.mp3"];
+        const playlist = ["song1.mp3", "song2.mp3", "song3.mp3"];
         let currentTrack = 0;
         const audio = new Audio();
 
@@ -121,6 +124,7 @@
                 audio.play();
             }
         }
+        function setVolume(val) { audio.volume = val; }
         audio.onended = () => {
             currentTrack = (currentTrack + 1) % playlist.length;
             audio.src = playlist[currentTrack];
